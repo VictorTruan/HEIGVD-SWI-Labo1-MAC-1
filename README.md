@@ -92,9 +92,24 @@ Le corps de la trame (Frame body) contient, entre autres, un champ de deux octet
 a) Utiliser la fonction de déauthentification de la suite aircrack, capturer les échanges et identifier le Reason code et son interpretation.
 
 __Question__ : quel code est utilisé par aircrack pour déauthentifier un client 802.11. Quelle est son interpretation ?
+source :https://www.aircrack-ng.org/doku.php?id=deauthentication
+
+```
+La raison est la 07 : Class 3 frame received from nonassociated
+```
+
+![Premiére raison trouvée](images/SWI_Labo01_Image01.png)
 
 __Question__ : A l'aide d'un filtre d'affichage, essayer de trouver d'autres trames de déauthentification dans votre capture. Avez-vous en trouvé d'autres ? Si oui, quel code contient-elle et quelle est son interpretation ?
-
+```
+Il est possible d'afficher tous les paquets de deauth grâce au filtre wlan.fc.type_subtype == 0x000c
+Wireshark le fournis en faisant clique droit sur cette ligne puis ajouter un fitre et appliquer comme filtre.
+```
+![Information sur le type de trame](images/SWI_Labo01_Image02.png)
+```
+D'autre paquet ont été trouvés et ont comme raisons la numéro 15 : 4-Way Handshake timeout. Comme c'est l'AP qui envoie ce paquet à un téléphone, il est possible que le téléphone ait changé d'AP et donc ne reponds plus au 4way handshake initialisé.
+```
+![Seconde raison trouvée](images/SWI_Labo01_Image03.png)
 b) Développer un script en Python/Scapy capable de générer et envoyer des trames de déauthentification. Le script donne le choix entre des Reason codes différents (liste ci-après) et doit pouvoir déduire si le message doit être envoyé à la STA ou à l'AP :
 * 1 - Unspecified
 * 4 - Disassociated due to inactivity
