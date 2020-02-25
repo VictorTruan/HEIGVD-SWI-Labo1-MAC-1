@@ -117,15 +117,32 @@ b) Développer un script en Python/Scapy capable de générer et envoyer des tra
 * 8 - Deauthenticated because sending STA is leaving BSS
 
 __Question__ : quels codes/raisons justifient l'envoie de la trame à la STA cible et pourquoi ?
+source : https://www.aboutcher.co.uk/2012/07/linux-wifi-deauthenticated-reason-codes/
+https://support.zyxel.eu/hc/en-us/articles/360009469759-What-is-the-meaning-of-802-11-Deauthentication-Reason-Codes-
+```
+Les codes suivants peuvent être envoyés par l'AP en direction de la station:
+La premiére car si la demande de la station est mal formée, la réponse de l'AP sera ce code.
+La quatrième car l'inactivité provient d'une station et non d'un AP.
+La cinquième car l'AP ne peux plus gérer d'hôtes supplémentaire et donc déconnecte les nouvelles stations.
+```
 
 __Question__ : quels codes/raisons justifient l'envoie de la trame à l'AP et pourquoi ?
-
+```
+La huitiéme car la station ce déconnecte du point d'accés.
+```
 __Question__ : Comment essayer de déauthentifier toutes les STA ?
-
+```
+La meilleure façon serait d'envoyer à tout le réseau le paquet en même temps. Pour faire cela il faut utiliser l'adresse FF:FF:FF:FF:FF:FF qui est l'adresse de broadcast.
+```
 __Question__ : Quelle est la différence entre le code 3 et le code 8 de la liste ?
-
+```
+Le troisème veut dire que le point d'accès est devenu offline et donc a déconnecté le client.
+Le huitième veut dire que l'utilisateur est déconnecté pour changer de wifi afin de faire du load balancing.
+```
 __Question__ : Expliquer l'effet de cette attaque sur la cible
-
+```
+La cible est déconnectée du réseau et peut, presque instantanément, ce reconnecter. Si l'attaque est utilisée en permanence, la cible serait incapable d'utiliser son wifi.
+```
 ### 2. Fake channel evil tween attack
 a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
 
