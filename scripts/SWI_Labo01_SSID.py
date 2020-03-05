@@ -9,7 +9,7 @@ from chance import chance
 from scapy.all import *
 #source : https://stackoverflow.com/questions/15318208/capture-control-c-in-python
 #source : https://github.com/davitv/chance
-print("Emission de beacons avec des nom selon un fichier ou au hasard. Utilisez CTRL+C pour quitter")
+print("Emission de beacons avec des noms selon un fichier ou au hasard. Utilisez CTRL+C pour quitter ou stopper l'attaque.")
 try:
     parser = argparse.ArgumentParser(description="Ce script permet de générer de faux SSID selon les entrée d'un fichier ou avec des noms aléatoire.")
     parser.add_argument("-f", "--file",type=str, help="Le fichier contenant les noms d'ap souhaités.")
@@ -43,7 +43,5 @@ try:
         for packet in packets:
             sendp(packet,inter=0.000001, iface=arguments.interface, verbose=0)
 except KeyboardInterrupt:
+    print("\nAu revoir!")
     sys.exit()
-#fakeBeacon= RadioTap() / Dot11(type=0, subtype=8, addr1=arguments.destination,addr2=arguments.source, addr3=arguments.source) / Dot11Beacon() / Dot11Elt(ID= "SSID", info=currentPacket.info.decode()) / Dot11Elt(ID="DSset", info=chr(newChannel))
-#sendp(fakeBeacon, iface=arguments.interface, verbose=False)
-
