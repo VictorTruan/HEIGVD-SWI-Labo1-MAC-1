@@ -1,14 +1,11 @@
 import argparse
-import subprocess
-import threading
-import time
-import curses
-import datetime
 import sys
 from chance import chance
 from scapy.all import *
 #source : https://stackoverflow.com/questions/15318208/capture-control-c-in-python
 #source : https://github.com/davitv/chance
+
+# Author: Victor Truan, Jerome Bagnoud | SWI - Labo 01
 print("Beacons generation with names from a file or randomly generated, use CTRL+C to quit or stop the attack.")
 try:
     parser = argparse.ArgumentParser(description="This scrips is used to generate false SSID, the SSID names come from a file or are randomly generated.")
@@ -24,7 +21,7 @@ try:
                     #Creation of the beacons packet using a random src MAC and the broadcat MAC as destination. The name is random.
                     src = RandMAC()
                     name = chance.word(language="en")
-                    packets.append(RadioTap() / Dot11(type=0, subtype=8, addr1="FF:FF:FF:FF:FF:FF",addr2=src, addr3=src) / Dot11Beacon() / Dot11Elt(ID= "SSID", info=nom) / Dot11Elt())
+                    packets.append(RadioTap() / Dot11(type=0, subtype=8, addr1="FF:FF:FF:FF:FF:FF",addr2=src, addr3=src) / Dot11Beacon() / Dot11Elt(ID= "SSID", info=name) / Dot11Elt())
                     print("One Wifi should be visible with the name :",name)
             #The application exit if the user does not provide a number.
             except:
