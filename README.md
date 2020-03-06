@@ -144,7 +144,7 @@ __Question__ : Expliquer l'effet de cette attaque sur la cible
 La cible est déconnectée du réseau et peut, presque instantanément, ce reconnecter. Si l'attaque est utilisée en permanence, la cible serait incapable d'utiliser son wifi.
 ```
 
-Voici un exemple d'utilisation du script
+Voici un exemple d'utilisation du script:
 
 Je choisi de déconnecter mon téléphone qui a comme adresse MAC Wifi 30:07:4D:9A:E9:CB, et qui est connecté à mon AP qui a comme adresse MAC F0:2F:A7:A8:99:C0, je choisi aussi d'envoyer une trame avec la reason code 5 (paramètre -r) et d'envoyer
 100 trames (paramètre -n).
