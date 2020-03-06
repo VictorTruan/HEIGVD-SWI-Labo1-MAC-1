@@ -152,6 +152,9 @@ a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
 * Générer un beacon concurrent annonçant un réseau sur un canal différent se trouvant à 6 canaux de séparation du réseau original
 
 __Question__ : Expliquer l'effet de cette attaque sur la cible
+```
+Si on déconnecte la cible de son AP actuel et que l'on fait une 'Evil Twin' de cet AP, la cible essaiera de se reconnecter a notre faux AP, mais dans ce cas, la cible n'arrivera pas à se connecter, car l'attaque n'est pas complète et on ne gère pas la suite de l'authentification.
+```
 
 
 ### 3. SSID flood attack
