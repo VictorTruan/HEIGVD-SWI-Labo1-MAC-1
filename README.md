@@ -156,6 +156,13 @@ __Question__ : Expliquer l'effet de cette attaque sur la cible
 Si on déconnecte la cible de son AP actuel et que l'on fait une 'Evil Twin' de cet AP, la cible essaiera de se reconnecter a notre faux AP, mais dans ce cas, la cible n'arrivera pas à se connecter, car l'attaque n'est pas complète et on ne gère pas la suite de l'authentification.
 ```
 
+En lançant le script on voit les AP s'afficher avec leur SSID, leur canal, ainsi que la puissance du signal.
+
+![Screen du script 2](images/SWI_Labo01_Image04.png)
+
+En séléctionnant un AP et en appuiant sur la touche 'Enter', on peut lancer l'attaque 'Evil Twin' et ainsi créer un faux AP similaire à celui choisi.
+
+![Screen du script 2](images/SWI_Labo01_Image05.png)
 
 ### 3. SSID flood attack
 
