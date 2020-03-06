@@ -133,10 +133,8 @@ def fakeProbe(apNumber, stdscr):
 
     # Crafting and sending the probe response
     fakeBeacon = currentPacket
-    #fakeBeacon.addr2 = newAdress
-    fakeBeacon.addr2 = "AA:AA:AA:AA:AA:AB"
-    #fakeBeacon.addr3 = newAdress
-    fakeBeacon.addr3 = "AA:AA:AA:AA:AA:AB"
+    fakeBeacon.addr2 = newAdress
+    fakeBeacon.addr3 = newAdress
 
     tmp1 = fakeBeacon.getlayer(6)
     fakeBeacon.getlayer(4).remove_payload()
