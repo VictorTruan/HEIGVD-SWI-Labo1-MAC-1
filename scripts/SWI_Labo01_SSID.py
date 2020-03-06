@@ -1,14 +1,11 @@
 import argparse
-import subprocess
-import threading
-import time
-import curses
-import datetime
 import sys
 from chance import chance
 from scapy.all import *
 #source : https://stackoverflow.com/questions/15318208/capture-control-c-in-python
 #source : https://github.com/davitv/chance
+
+# Author: Victor Truan, Jerome Bagnoud | SWI - Labo 01
 print("Beacons generation with names from a file or randomly generated, use CTRL+C to quit or stop the attack.")
 try:
     parser = argparse.ArgumentParser(description="This scrips is used to generate false SSID, the SSID names come from a file or are randomly generated.")
