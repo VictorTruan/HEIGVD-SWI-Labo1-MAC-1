@@ -14,13 +14,12 @@
 # - https://www.youtube.com/watch?v=zwMsmBsC1GM&t=1117s
 # - https://stackoverflow.com/questions/22670510/wireless-data-packet-capturing-with-help-of-scapy
 # - https://stackoverflow.com/questions/29817417/scapy-insert-packet-layer-between-two-other-layers + Edin Mujkanovic
+#
+# Author: Victor Truan, Jerome Bagnoud | SWI - Labo 01
 
 import argparse
 import subprocess
-import threading
-import time
 import curses
-import datetime
 from scapy.all import *
 
 apList = []

