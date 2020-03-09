@@ -107,7 +107,7 @@ Wireshark le fournis en faisant clique droit sur cette ligne puis ajouter un fit
 ```
 ![Information sur le type de trame](images/SWI_Labo01_Image02.png)
 ```
-D'autre paquet ont été trouvés et ont comme raisons la numéro 15 : 4-Way Handshake timeout. Comme c'est l'AP qui envoie ce paquet à un téléphone, il est possible que le téléphone ait changé d'AP et donc ne reponds plus au 4way handshake initialisé.
+D'autre paquet ont été trouvés et ont comme raisons la numéro 15 : 4-Way Handshake timeout. Comme c'est l'AP qui envoie ce paquet à un téléphone, il est possible que le téléphone ait changé d'AP et donc ne réponds plus au 4way handshake initialisé.
 ```
 ![Seconde raison trouvée](images/SWI_Labo01_Image03.png)
 b) Développer un script en Python/Scapy capable de générer et envoyer des trames de déauthentification. Le script donne le choix entre des Reason codes différents (liste ci-après) et doit pouvoir déduire si le message doit être envoyé à la STA ou à l'AP :
@@ -121,14 +121,14 @@ source : https://www.aboutcher.co.uk/2012/07/linux-wifi-deauthenticated-reason-c
 https://support.zyxel.eu/hc/en-us/articles/360009469759-What-is-the-meaning-of-802-11-Deauthentication-Reason-Codes-
 ```
 Les codes suivants peuvent être envoyés par l'AP en direction de la station:
-La premiére car si la demande de la station est mal formée, la réponse de l'AP sera ce code.
+La première car si la demande de la station est mal formée, la réponse de l'AP sera ce code.
 La quatrième car l'inactivité provient d'une station et non d'un AP.
-La cinquième car l'AP ne peux plus gérer d'hôtes supplémentaire et donc déconnecte les nouvelles stations.
+La cinquième car l'AP ne peut plus gérer d'hôtes supplémentaire et donc déconnecte les nouvelles stations.
 ```
 
 __Question__ : quels codes/raisons justifient l'envoie de la trame à l'AP et pourquoi ?
 ```
-La huitiéme car la station ce déconnecte du point d'accés.
+La huitième car la station ce déconnecte du point d'accès.
 ```
 __Question__ : Comment essayer de déauthentifier toutes les STA ?
 ```
@@ -136,15 +136,15 @@ La meilleure façon serait d'envoyer à tout le réseau le paquet en même temps
 ```
 __Question__ : Quelle est la différence entre le code 3 et le code 8 de la liste ?
 ```
-Le troisème veut dire que le point d'accès est devenu offline et donc a déconnecté le client.
+Le troisième veut dire que le point d'accès est devenu offline et donc à déconnecté le client.
 Le huitième veut dire que l'utilisateur est déconnecté pour changer de wifi afin de faire du load balancing.
 ```
 __Question__ : Expliquer l'effet de cette attaque sur la cible
 ```
-La cible est déconnectée du réseau et peut, presque instantanément, ce reconnecter. Si l'attaque est utilisée en permanence, la cible serait incapable d'utiliser son wifi.
+La cible est déconnectée du réseau et peut, presque instantanément, se reconnecter. Si l'attaque est utilisée en permanence, la cible serait incapable d'utiliser son wifi.
 ```
 
-Voici un exemple d'utilisation du script
+Voici un exemple d'utilisation du script:
 
 Je choisi de déconnecter mon téléphone qui a comme adresse MAC Wifi 30:07:4D:9A:E9:CB, et qui est connecté à mon AP qui a comme adresse MAC F0:2F:A7:A8:99:C0, je choisi aussi d'envoyer une trame avec la reason code 5 (paramètre -r) et d'envoyer
 100 trames (paramètre -n).
@@ -175,6 +175,11 @@ En séléctionnant un AP et en appuiant sur la touche 'Enter', on peut lancer l'
 ### 3. SSID flood attack
 
 Développer un script en Python/Scapy capable d'inonder la salle avec des SSID dont le nom correspond à une liste contenue dans un fichier text fournit par un utilisateur. Si l'utilisateur ne possède pas une liste, il peut spécifier le nombre d'AP à générer. Dans ce cas, les SSID seront générés de manière aléatoire.
+
+![Screen du script 3](images/SWI_Labo01_Image07.png)
+
+Nous voyons sur cette capture d'écran, le troisiéme script lancé, les trois wifis sont émis par une carte réseau en mode monitor et l'interface montrant les réseaux wifis disponible utilise une carte en configuration normale.
+
 
 ## Livrables
 
