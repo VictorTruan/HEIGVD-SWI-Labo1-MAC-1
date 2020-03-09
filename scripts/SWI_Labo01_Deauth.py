@@ -14,10 +14,10 @@ from scapy.all import *
 
 # Arguments
 parser = argparse.ArgumentParser(description="This script is sending \'deauth\' packet in order to disconnect user from a Wifi AP (Access Point).")
-parser.add_argument("-s", help="the access point MAC Address")
-parser.add_argument("-c", help="the client MAC Adress")
-parser.add_argument("-r", "--reason",type=int, choices=[1, 4, 5, 8], help="the deauth packet reason type")
-parser.add_argument("-i", "--interface", help="the interface on which send the packet")
+parser.add_argument("-s", required=True, help="the access point MAC Address")
+parser.add_argument("-c", required=True, help="the client MAC Adress")
+parser.add_argument("-r", "--reason",type=int, default=1, choices=[1, 4, 5, 8], help="the deauth packet reason type")
+parser.add_argument("-i", "--interface", required=True, help="the interface on which send the packet")
 parser.add_argument("-n", "--number", type=int, default=1, help="the number of packet to send (default=1)")
 
 arguments = parser.parse_args()

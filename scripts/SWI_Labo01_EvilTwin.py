@@ -18,12 +18,10 @@
 # Author: Victor Truan, Jerome Bagnoud | SWI - Labo 01
 
 import argparse
-import subprocess
 import curses
 from scapy.all import *
 
 apList = []
-kill = False
 BROADCAST_MAC_ADDRESS = "FF:FF:FF:FF:FF:FF"
 selectedAP = 0
 
@@ -80,7 +78,6 @@ def displayAPList(stdscr, selectedAP):
 def packetHandling(stdscr):
     # This function verifiy if the packet is a management frame (more specifically a BeaconFrame), and read all necessary information from the packet (SSID, channel, etc...)
     def detectSSID(packet):
-        global line
         global selectedAP
 
         keyPressed = stdscr.getch()
@@ -114,13 +111,6 @@ def packetHandling(stdscr):
 
 def fakeProbe(apNumber, stdscr):
     currentPacket = apList[int(apNumber) - 1]
-
-    # Killing the changing channel thread
-    global kill
-    kill = True
-
-    # Letting the thread finishing
-    time.sleep(1)
 
     # Changing channel to the one of the real AP + 6
     newChannel = ((ord(currentPacket[Dot11Elt][2].info.decode()) + 5) % 13) + 1
