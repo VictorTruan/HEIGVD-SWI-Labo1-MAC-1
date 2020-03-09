@@ -176,6 +176,11 @@ En séléctionnant un AP et en appuiant sur la touche 'Enter', on peut lancer l'
 
 Développer un script en Python/Scapy capable d'inonder la salle avec des SSID dont le nom correspond à une liste contenue dans un fichier text fournit par un utilisateur. Si l'utilisateur ne possède pas une liste, il peut spécifier le nombre d'AP à générer. Dans ce cas, les SSID seront générés de manière aléatoire.
 
+![Screen du script 3](images/SWI_Labo01_Image07.png)
+
+Nous voyons sur cette capture d'écran, le troisiéme script lancé, les trois wifis sont émis par une carte réseau en mode monitor et l'interface montrant les réseaux wifis disponible utilise une carte en configuration normale.
+
+
 ## Livrables
 
 Un fork du repo original . Puis, un Pull Request contenant :
