@@ -180,6 +180,7 @@ Développer un script en Python/Scapy capable d'inonder la salle avec des SSID d
 
 Nous voyons sur cette capture d'écran, le troisiéme script lancé, les trois wifis sont émis par une carte réseau en mode monitor et l'interface montrant les réseaux wifis disponible utilise une carte en configuration normale.
 
+Ce script utilise la librairie Chance en python, si elle n'est pas installée il faudra le faire grâce à la commande "sudo pip3 install chance"
 
 ## Livrables
 
